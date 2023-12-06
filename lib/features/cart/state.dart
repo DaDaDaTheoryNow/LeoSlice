@@ -17,6 +17,15 @@ class CartState {
   AllUserOrdersState get allUserOrdersState => _allUserOrdersState.value;
   set allUserOrdersState(value) => _allUserOrdersState.value = value;
 
+  final RxString _userOrdersError = "".obs;
+  String get userOrdersError => _userOrdersError.value;
+  set userOrdersError(value) => _userOrdersError.value = value;
+
+  final Rx<AllUserOrdersState> _userOrdersApiState =
+      AllUserOrdersState.done.obs;
+  AllUserOrdersState get userOrdersApiState => _userOrdersApiState.value;
+  set userOrdersApiState(value) => _userOrdersApiState.value = value;
+
   final RxList<Pizza> _cartPizzaList = <Pizza>[].obs;
   List<Pizza> get cartPizzaList => _cartPizzaList;
   set cartPizzaList(List<Pizza> value) => _cartPizzaList.value = value;

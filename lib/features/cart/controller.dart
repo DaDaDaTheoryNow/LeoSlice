@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide FormData, Response;
 import 'package:leo_slice/common/until/enum/all_user_orders_state.dart';
 import 'package:leo_slice/common/until/model/all_user_orders.dart';
 import 'package:leo_slice/common/until/model/pizza.dart';
@@ -38,6 +38,73 @@ class CartController extends GetxController {
 
     if (pizzaToChange.toCart.value <= 0) {
       state.cartPizzaList.remove(pizzaToChange);
+    }
+  }
+
+  void deleteDraft() {
+    state.cartPizzaList.clear();
+    Get.find<MenuController>()
+        .state
+        .pizzaList
+        .forEach((element) => element.toCart.value = 0);
+  }
+
+  void acceptDraft() async {
+    await createNewOrder();
+
+    state.cartPizzaList.clear();
+    Get.find<MenuController>()
+        .state
+        .pizzaList
+        .forEach((element) => element.toCart.value = 0);
+  }
+
+  Future<void> createNewOrder() async {
+    if (sharedState.tokenResponse == null ||
+        sharedState.tokenResponse?.accessToken == null) {
+      _setAllUserOrdersState(AllUserOrdersState.needLogin);
+      return;
+    }
+
+    const url = "https://pizza-dev-k5af.onrender.com/order/new-order";
+
+    try {
+      Response response = await dio.post(
+        url,
+        options: Options(
+          contentType: "application/json",
+          headers: {
+            'Authorization': 'Bearer ${sharedState.tokenResponse!.accessToken}',
+          },
+        ),
+        data: {
+          "pizzas": state.cartPizzaList.map((pizza) => pizza.toJson()).toList(),
+          "address": '',
+        },
+      );
+
+      if (response.statusCode == 401 || response.statusCode == 422) {
+        state.userOrdersError = "Invalid Credentials";
+        _setUserOrdersApiState(AllUserOrdersState.error);
+      }
+      if (response.statusCode == 200) {
+        final List<Order> copy = List.from(state.allUserOrders.orders);
+        copy.addAll(AllUserOrders.fromJson(response.data).orders);
+
+        state.allUserOrders = AllUserOrders(orders: copy);
+        _setUserOrdersApiState(AllUserOrdersState.done);
+      }
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.sendTimeout) {
+        state.userOrdersError =
+            "Connection problems, check your internet connection";
+      } else {
+        state.userOrdersError = e.toString();
+      }
+
+      _setUserOrdersApiState(AllUserOrdersState.error);
     }
   }
 
@@ -86,5 +153,9 @@ class CartController extends GetxController {
 
   void _setAllUserOrdersState(AllUserOrdersState allUserOrdersState) {
     state.allUserOrdersState = allUserOrdersState;
+  }
+
+  void _setUserOrdersApiState(AllUserOrdersState allUserOrdersState) {
+    state.userOrdersApiState = allUserOrdersState;
   }
 }

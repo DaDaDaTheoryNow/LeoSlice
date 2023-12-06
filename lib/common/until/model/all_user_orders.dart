@@ -5,10 +5,26 @@ class AllUserOrders {
 
   AllUserOrders({required this.orders});
 
-  factory AllUserOrders.fromJson(List<dynamic> json) {
-    List<Order> orders = json.map((order) => Order.fromJson(order)).toList();
-
-    return AllUserOrders(orders: orders);
+  factory AllUserOrders.fromJson(dynamic json) {
+    if (json is List) {
+      List<Order> orders = json.map((order) => Order.fromJson(order)).toList();
+      return AllUserOrders(orders: orders);
+    } else if (json is Map<String, dynamic>) {
+      List<Order> orders = [
+        Order.fromJson({
+          'pizzas': json['pizzas'],
+          'address': json['address'] ?? '',
+          'user_id': json['user_id'],
+          'price': json['price'].toDouble(),
+          'date': json['date'],
+          'status': json['status'],
+        })
+      ];
+      return AllUserOrders(orders: orders);
+    } else {
+      throw FormatException(
+          'Invalid JSON format for AllUserOrders: ${json.runtimeType}');
+    }
   }
 }
 
