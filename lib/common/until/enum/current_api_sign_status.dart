@@ -1,0 +1,1 @@
+enum CurrentApiSignStatus { stay, loading }
