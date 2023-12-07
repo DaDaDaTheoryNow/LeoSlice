@@ -1,2 +1,6 @@
 # LeoSlice
-Running late
+
+## Technologies
+- Flutter
+- Python (backend)
+- restapi
