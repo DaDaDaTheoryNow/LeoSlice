@@ -1,15 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:leo_slice/common/until/model/pizza.dart';
 import 'package:flutter/material.dart' hide MenuController;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:leo_slice/common/theme/app_colors.dart';
-import 'package:leo_slice/common/until/model/pizza.dart';
-import 'package:leo_slice/features/menu/controller.dart';
+import 'package:leo_slice/features/cart/controller.dart';
 
-class PizzaWidget extends GetView<MenuController> {
+class InOrderPizzaWidget extends GetView<CartController> {
   final Pizza pizza;
 
-  const PizzaWidget({super.key, required this.pizza});
+  const InOrderPizzaWidget({super.key, required this.pizza});
 
   @override
   Widget build(BuildContext context) {
@@ -27,15 +27,12 @@ class PizzaWidget extends GetView<MenuController> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Center(
-                  child: CachedNetworkImage(
-                    imageUrl: pizza.picture.value,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                  ),
+                child: CachedNetworkImage(
+                  imageUrl: pizza.picture.value,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) =>
+                      const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
               ),
               Expanded(
@@ -45,6 +42,8 @@ class PizzaWidget extends GetView<MenuController> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8.w),
                       child: Text(
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         pizza.title.value,
                         style: TextStyle(
                           fontSize: 20.sp,
@@ -104,24 +103,21 @@ class PizzaWidget extends GetView<MenuController> {
                 Card(
                   color: AppColors.blue,
                   child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20.w,
-                      vertical: 5.h,
-                    ),
-                    child: Text(
-                      "${pizza.price.value.toStringAsFixed(0)}₽",
-                      style: const TextStyle(
-                        color: Colors.white,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20.w,
+                        vertical: 5.h,
                       ),
-                    ),
-                  ),
+                      child: Obx(
+                        () => Text(
+                          "${pizza.price.value.toStringAsFixed(0)}₽",
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      )),
                 ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.remove_shopping_cart,
-                    color: AppColors.blue,
-                  ),
-                  onPressed: () => controller.removePizzaFromCart(pizza),
+                SizedBox(
+                  width: 5.w,
                 ),
                 Obx(
                   () => Text(
@@ -131,13 +127,6 @@ class PizzaWidget extends GetView<MenuController> {
                       fontStyle: FontStyle.italic,
                     ),
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.add_shopping_cart,
-                    color: AppColors.blue,
-                  ),
-                  onPressed: () => controller.addPizzaToCart(pizza),
                 ),
               ],
             ),

@@ -38,15 +38,15 @@ class Pizza {
 
   factory Pizza.fromJson(Map<String, dynamic> json) {
     return Pizza(
-      title: json['title'] ?? '',
-      crust: json['crust'] ?? '',
-      sauce: json['sauce'] ?? '',
-      toppings: List<String>.from(json['toppings'] ?? []),
-      size: json['size'] ?? '',
-      picture: json['picture'] ?? '',
-      id: json['id'] ?? 0,
-      price: (json['price'] as num?)?.toDouble() ?? 0.0,
-      isCustom: json['is_custom'] ?? false,
+      title: json['title'],
+      crust: json['crust'],
+      sauce: json['sauce'],
+      toppings: List<String>.from(json['toppings']),
+      size: json['size'],
+      picture: json['picture'],
+      id: json['id'],
+      price: json['price'].toDouble(),
+      isCustom: json['is_custom'],
       toCart: 0,
     );
   }

@@ -23,6 +23,15 @@ class CartController extends GetxController {
     Get.find<HomeController>().onItemSelected(0, animated: true);
   }
 
+  void countDraftPrice() {
+    int draftPrice = 0;
+    for (var pizza in state.cartPizzaList) {
+      draftPrice += (pizza.toCart * pizza.price.value).toInt();
+    }
+
+    state.draftPrice = draftPrice;
+  }
+
   void removePizzaFromDraft(Pizza pizza) {
     var pizzaToChange = state.cartPizzaList
         .firstWhere((pizzaValue) => pizzaValue.id.value == pizza.id.value);
@@ -39,6 +48,8 @@ class CartController extends GetxController {
     if (pizzaToChange.toCart.value <= 0) {
       state.cartPizzaList.remove(pizzaToChange);
     }
+
+    countDraftPrice();
   }
 
   void deleteDraft() {
@@ -69,6 +80,8 @@ class CartController extends GetxController {
     const url = "https://pizza-dev-k5af.onrender.com/order/new-order";
 
     try {
+      _setUserOrdersApiState(AllUserOrdersState.loading);
+
       Response response = await dio.post(
         url,
         options: Options(

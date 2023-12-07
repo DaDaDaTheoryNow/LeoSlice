@@ -29,4 +29,8 @@ class CartState {
   final RxList<Pizza> _cartPizzaList = <Pizza>[].obs;
   List<Pizza> get cartPizzaList => _cartPizzaList;
   set cartPizzaList(List<Pizza> value) => _cartPizzaList.value = value;
+
+  final RxInt _draftPrice = 0.obs;
+  int get draftPrice => _draftPrice.value;
+  set draftPrice(value) => _draftPrice.value = value;
 }

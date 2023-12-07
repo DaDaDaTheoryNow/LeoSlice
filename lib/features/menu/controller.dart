@@ -10,6 +10,8 @@ class MenuController extends GetxController {
 
   final dio = Dio();
 
+  final cartController = Get.find<CartController>();
+
   void addPizzaToCart(Pizza pizza) {
     state.pizzaList
         .where((pizzaValue) => pizzaValue.id.value == pizza.id.value)
@@ -21,7 +23,8 @@ class MenuController extends GetxController {
 
     pizzaToCart.removeWhere((element) => element.toCart.value == 0);
 
-    Get.find<CartController>().state.cartPizzaList = pizzaToCart;
+    cartController.state.cartPizzaList = pizzaToCart;
+    cartController.countDraftPrice();
   }
 
   void removePizzaFromCart(Pizza pizza) {
@@ -36,14 +39,15 @@ class MenuController extends GetxController {
 
     pizzaToCart.removeWhere((element) => element.toCart.value == 0);
 
-    final cartController = Get.find<CartController>();
-    cartController.state.cartPizzaList.addAll(pizzaToCart);
+    cartController.state.cartPizzaList = pizzaToCart;
 
     final Pizza? pizzaToDeleteDraft = cartController.state.cartPizzaList
         .firstWhereOrNull((element) => element.toCart > 0);
     if (pizzaToDeleteDraft == null) {
       cartController.state.cartPizzaList.clear();
     }
+
+    cartController.countDraftPrice();
   }
 
   Future<void> fetchPizza({bool changeState = true}) async {
@@ -67,9 +71,10 @@ class MenuController extends GetxController {
       }
       if (response.statusCode == 200) {
         List<dynamic> data = response.data;
+        cartController.state.cartPizzaList.clear();
+
         state.pizzaList = data.map((json) => Pizza.fromJson(json)).toList();
         if (state.pizzaList.isNotEmpty) {
-          state.pizzaList.removeWhere((pizza) => pizza.title.value == "string");
           if (changeState) {
             _setMenuState(CurrentApiMenuState.done);
           }

@@ -1,7 +1,7 @@
 import 'package:leo_slice/common/until/model/pizza.dart';
 
 class AllUserOrders {
-  List<Order> orders;
+  final List<Order> orders;
 
   AllUserOrders({required this.orders});
 
@@ -10,31 +10,21 @@ class AllUserOrders {
       List<Order> orders = json.map((order) => Order.fromJson(order)).toList();
       return AllUserOrders(orders: orders);
     } else if (json is Map<String, dynamic>) {
-      List<Order> orders = [
-        Order.fromJson({
-          'pizzas': json['pizzas'],
-          'address': json['address'] ?? '',
-          'user_id': json['user_id'],
-          'price': json['price'].toDouble(),
-          'date': json['date'],
-          'status': json['status'],
-        })
-      ];
-      return AllUserOrders(orders: orders);
+      Order order = Order.fromJson(json);
+      return AllUserOrders(orders: [order]);
     } else {
-      throw FormatException(
-          'Invalid JSON format for AllUserOrders: ${json.runtimeType}');
+      throw ArgumentError("Invalid JSON format for AllUserOrders");
     }
   }
 }
 
 class Order {
-  List<Pizza> pizzas;
-  String address;
-  int userId;
-  double price;
-  DateTime date;
-  String status;
+  final List<PizzaOrder> pizzas;
+  final String address;
+  final int userId;
+  final double price;
+  final DateTime date;
+  final String status;
 
   Order({
     required this.pizzas,
@@ -46,16 +36,31 @@ class Order {
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
-    List<Pizza> pizzas =
-        (json['pizzas'] as List).map((pizza) => Pizza.fromJson(pizza)).toList();
+    List<PizzaOrder> pizzas = (json['pizzas'] as List)
+        .map((pizza) => PizzaOrder.fromJson(pizza))
+        .toList();
 
     return Order(
       pizzas: pizzas,
-      address: json['address'],
+      address: json['address'] ?? "",
       userId: json['user_id'],
       price: json['price'].toDouble(),
       date: DateTime.parse(json['date']),
-      status: json['status'],
+      status: json['status'] ?? "",
+    );
+  }
+}
+
+class PizzaOrder {
+  final Pizza pizza;
+  final int amount;
+
+  PizzaOrder({required this.pizza, required this.amount});
+
+  factory PizzaOrder.fromJson(Map<String, dynamic> json) {
+    return PizzaOrder(
+      pizza: Pizza.fromJson(json['pizza']),
+      amount: json['amount'],
     );
   }
 }

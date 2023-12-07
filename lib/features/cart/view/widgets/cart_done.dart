@@ -1,5 +1,6 @@
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:leo_slice/common/theme/app_colors.dart';
 import 'package:leo_slice/common/until/enum/all_user_orders_state.dart';
@@ -26,7 +27,9 @@ class CartDone extends GetView<CartController> {
     return Column(
       children: [
         Obx(
-          () => (controller.state.cartPizzaList.isNotEmpty)
+          () => (controller.state.cartPizzaList.isNotEmpty &&
+                  controller.state.userOrdersApiState !=
+                      AllUserOrdersState.loading)
               ? Column(
                   children: [
                     Container(
@@ -59,19 +62,37 @@ class CartDone extends GetView<CartController> {
                                   _draft.currentState?.collapse();
                                   controller.deleteDraft();
                                 },
-                                child: const Column(
+                                child: Column(
                                   children: <Widget>[
-                                    Icon(
+                                    const Icon(
                                       Icons.arrow_downward,
                                       color: Colors.red,
                                     ),
                                     Padding(
                                       padding:
-                                          EdgeInsets.symmetric(vertical: 2.0),
+                                          EdgeInsets.symmetric(vertical: 2.h),
                                     ),
-                                    Text('Delete'),
+                                    const Text('Delete'),
                                   ],
                                 ),
+                              ),
+                              Card(
+                                color: AppColors.blue,
+                                child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 40.w,
+                                      vertical: 5.h,
+                                    ),
+                                    child: Obx(
+                                      () => Text(
+                                        "${controller.state.draftPrice}₽",
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    )),
                               ),
                               TextButton(
                                 style: flatButtonStyle,
@@ -79,17 +100,17 @@ class CartDone extends GetView<CartController> {
                                   _draft.currentState?.collapse();
                                   controller.acceptDraft();
                                 },
-                                child: const Column(
+                                child: Column(
                                   children: <Widget>[
-                                    Icon(
+                                    const Icon(
                                       Icons.arrow_upward,
                                       color: Colors.green,
                                     ),
                                     Padding(
                                       padding:
-                                          EdgeInsets.symmetric(vertical: 2.0),
+                                          EdgeInsets.symmetric(vertical: 2.h),
                                     ),
-                                    Text('Accept'),
+                                    const Text('Accept'),
                                   ],
                                 ),
                               ),
@@ -101,7 +122,15 @@ class CartDone extends GetView<CartController> {
                     const Divider(),
                   ],
                 )
-              : const SizedBox(),
+              : (controller.state.userOrdersApiState ==
+                      AllUserOrdersState.loading)
+                  ? Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 20.h, bottom: 10.h),
+                        child: const CircularProgressIndicator(),
+                      ),
+                    )
+                  : const SizedBox(),
         ),
         // error
         Obx(() =>
