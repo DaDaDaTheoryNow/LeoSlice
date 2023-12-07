@@ -23,7 +23,7 @@ class OrderInfoWidget extends StatelessWidget {
           children: [
             const Text('Address: г.Самара - д.28 - кв.123'),
             Text('User ID: ${order.userId}'),
-            Text('Price: \$${order.price.toStringAsFixed(2)}'),
+            Text('Price: ${order.price.toStringAsFixed(2)}₽'),
             Text('Date: ${order.date.toString()}'),
             Text('Status: ${order.status}'),
           ],

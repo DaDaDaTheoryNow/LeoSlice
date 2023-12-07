@@ -27,7 +27,7 @@ class PizzaWidget extends GetView<MenuController> {
               ),
             ),
             title: Text(
-              "${pizza.title.value} - \$${pizza.price.value.toStringAsFixed(2)}",
+              "${pizza.title.value} - ${pizza.price.value.toStringAsFixed(2)}₽",
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
