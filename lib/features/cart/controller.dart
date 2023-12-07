@@ -53,21 +53,21 @@ class CartController extends GetxController {
   }
 
   void deleteDraft() {
+    final menuController = Get.find<MenuController>();
     state.cartPizzaList.clear();
-    Get.find<MenuController>()
-        .state
-        .pizzaList
-        .forEach((element) => element.toCart.value = 0);
+    for (var element in menuController.state.pizzaList) {
+      element.toCart.value = 0;
+    }
   }
 
   void acceptDraft() async {
     await createNewOrder();
 
+    final menuController = Get.find<MenuController>();
     state.cartPizzaList.clear();
-    Get.find<MenuController>()
-        .state
-        .pizzaList
-        .forEach((element) => element.toCart.value = 0);
+    for (var element in menuController.state.pizzaList) {
+      element.toCart.value = 0;
+    }
   }
 
   Future<void> createNewOrder() async {
@@ -162,6 +162,8 @@ class CartController extends GetxController {
 
       _setAllUserOrdersState(AllUserOrdersState.error);
     }
+
+    _setUserOrdersApiState(AllUserOrdersState.done);
   }
 
   void _setAllUserOrdersState(AllUserOrdersState allUserOrdersState) {

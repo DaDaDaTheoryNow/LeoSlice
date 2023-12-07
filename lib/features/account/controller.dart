@@ -42,8 +42,8 @@ class ProfileController extends GetxController {
     const url = 'https://pizza-dev-k5af.onrender.com/auth/login';
 
     Map<String, dynamic> data = {
-      "username": name,
-      "password": password.toString(),
+      "username": name.trim(),
+      "password": password.trim(),
     };
 
     try {
@@ -85,8 +85,8 @@ class ProfileController extends GetxController {
     const url = 'https://pizza-dev-k5af.onrender.com/auth/register';
 
     Map<String, dynamic> data = {
-      'username': name,
-      "password": password,
+      'username': name.trim(),
+      "password": password.trim(),
     };
 
     try {

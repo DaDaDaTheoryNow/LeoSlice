@@ -5,9 +5,9 @@ import 'package:get/get.dart';
 import 'package:leo_slice/common/theme/app_colors.dart';
 import 'package:leo_slice/common/until/enum/all_user_orders_state.dart';
 import 'package:leo_slice/common/until/model/pizza.dart';
-import 'package:leo_slice/common/widgets/sign_error.dart';
 import 'package:leo_slice/features/cart/controller.dart';
 import 'package:leo_slice/features/cart/view/widgets/cart_empty.dart';
+import 'package:leo_slice/features/cart/view/widgets/orders_error.dart';
 import 'package:leo_slice/features/cart/view/widgets/order_info_widget.dart';
 import 'package:leo_slice/features/cart/view/widgets/order_pizza_widget.dart';
 
@@ -46,73 +46,76 @@ class CartDone extends GetView<CartController> {
                             color: Colors.white,
                           ),
                         ),
-                        title: const Text('Draft!'),
+                        title: const Text('New Order!'),
                         children: [
                           ...controller.state.cartPizzaList.map((Pizza pizza) {
                             return OrderPizzaWidget(pizza: pizza);
                           }).toList(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: <Widget>[
-                              TextButton(
-                                style: flatButtonStyle,
-                                onPressed: () {
-                                  _draft.currentState?.collapse();
-                                  controller.deleteDraft();
-                                },
-                                child: Column(
-                                  children: <Widget>[
-                                    const Icon(
-                                      Icons.arrow_downward,
-                                      color: Colors.red,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 2.h),
-                                    ),
-                                    const Text('Delete'),
-                                  ],
-                                ),
-                              ),
-                              Card(
-                                color: AppColors.blue,
-                                child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 40.w,
-                                      vertical: 5.h,
-                                    ),
-                                    child: Obx(
-                                      () => Text(
-                                        "${controller.state.draftPrice}₽",
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                        ),
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 8.h),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                TextButton(
+                                  style: flatButtonStyle,
+                                  onPressed: () {
+                                    _draft.currentState?.collapse();
+                                    controller.deleteDraft();
+                                  },
+                                  child: Column(
+                                    children: <Widget>[
+                                      const Icon(
+                                        Icons.arrow_downward,
+                                        color: Colors.red,
                                       ),
-                                    )),
-                              ),
-                              TextButton(
-                                style: flatButtonStyle,
-                                onPressed: () {
-                                  _draft.currentState?.collapse();
-                                  controller.acceptDraft();
-                                },
-                                child: Column(
-                                  children: <Widget>[
-                                    const Icon(
-                                      Icons.arrow_upward,
-                                      color: Colors.green,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 2.h),
-                                    ),
-                                    const Text('Accept'),
-                                  ],
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 2.h),
+                                      ),
+                                      const Text('Delete'),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                                Card(
+                                  color: AppColors.blue,
+                                  child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 40.w,
+                                        vertical: 5.h,
+                                      ),
+                                      child: Obx(
+                                        () => Text(
+                                          "${controller.state.draftPrice}₽",
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      )),
+                                ),
+                                TextButton(
+                                  style: flatButtonStyle,
+                                  onPressed: () {
+                                    _draft.currentState?.collapse();
+                                    controller.acceptDraft();
+                                  },
+                                  child: Column(
+                                    children: <Widget>[
+                                      const Icon(
+                                        Icons.arrow_upward,
+                                        color: Colors.green,
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 2.h),
+                                      ),
+                                      const Text('Accept'),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -133,7 +136,7 @@ class CartDone extends GetView<CartController> {
         // error
         Obx(() =>
             (controller.state.userOrdersApiState == AllUserOrdersState.error)
-                ? MyErrorWidget(error: controller.state.userOrdersError)
+                ? const OrdersError()
                 : const SizedBox()),
         // empty cart
         Obx(() => (controller.state.allUserOrders.orders.isEmpty &&
@@ -148,7 +151,8 @@ class CartDone extends GetView<CartController> {
         // all user orders
         Obx(() => (controller.state.allUserOrders.orders.isNotEmpty)
             ? Column(
-                children: controller.state.allUserOrders.orders.map((order) {
+                children:
+                    controller.state.allUserOrders.orders.reversed.map((order) {
                   return OrderInfoWidget(order: order);
                 }).toList(),
               )

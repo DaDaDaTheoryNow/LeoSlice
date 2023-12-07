@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:leo_slice/common/until/enum/current_api_menu_state.dart';
 import 'package:leo_slice/common/until/model/pizza.dart';
 import 'package:leo_slice/features/cart/controller.dart';
+import 'package:leo_slice/features/home/controller.dart';
 import 'package:leo_slice/features/menu/state.dart';
 
 class MenuController extends GetxController {
@@ -11,6 +12,10 @@ class MenuController extends GetxController {
   final dio = Dio();
 
   final cartController = Get.find<CartController>();
+
+  void jumpToCartPage() {
+    Get.find<HomeController>().onItemSelected(1, animated: true);
+  }
 
   void addPizzaToCart(Pizza pizza) {
     state.pizzaList

@@ -105,6 +105,7 @@ class OrderPizzaWidget extends GetView<CartController> {
               children: [
                 Card(
                   color: AppColors.blue,
+                  margin: EdgeInsets.only(right: 15.w),
                   child: Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: 20.w,
@@ -119,13 +120,6 @@ class OrderPizzaWidget extends GetView<CartController> {
                         ),
                       )),
                 ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.remove_shopping_cart,
-                    color: AppColors.blue,
-                  ),
-                  onPressed: () => controller.removePizzaFromDraft(pizza),
-                ),
                 Obx(
                   () => Text(
                     '${pizza.toCart}x',
@@ -134,6 +128,14 @@ class OrderPizzaWidget extends GetView<CartController> {
                       fontStyle: FontStyle.italic,
                     ),
                   ),
+                ),
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  icon: const Icon(
+                    Icons.remove_shopping_cart,
+                    color: AppColors.blue,
+                  ),
+                  onPressed: () => controller.removePizzaFromDraft(pizza),
                 ),
               ],
             ),
