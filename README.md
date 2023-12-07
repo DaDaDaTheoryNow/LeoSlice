@@ -3,4 +3,4 @@
 ## Technologies
 - Flutter
 - Python (backend)
-- restapi
+- RestApi

@@ -51,10 +51,8 @@ class CartDone extends GetView<CartController> {
                           ...controller.state.cartPizzaList.map((Pizza pizza) {
                             return OrderPizzaWidget(pizza: pizza);
                           }).toList(),
-                          ButtonBar(
-                            alignment: MainAxisAlignment.spaceAround,
-                            buttonHeight: 52.0,
-                            buttonMinWidth: 90.0,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
                               TextButton(
                                 style: flatButtonStyle,

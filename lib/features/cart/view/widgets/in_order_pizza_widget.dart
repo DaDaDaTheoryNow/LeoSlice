@@ -27,12 +27,15 @@ class InOrderPizzaWidget extends GetView<CartController> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: CachedNetworkImage(
-                  imageUrl: pizza.picture.value,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                child: Center(
+                  child: CachedNetworkImage(
+                    imageUrl: pizza.picture.value,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  ),
                 ),
               ),
               Expanded(
@@ -58,6 +61,8 @@ class InOrderPizzaWidget extends GetView<CartController> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8.w),
                       child: Text(
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         'Sauce - ${pizza.sauce.value}',
                         style: TextStyle(
                           fontSize: 15.sp,
@@ -79,6 +84,8 @@ class InOrderPizzaWidget extends GetView<CartController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             'Toppings:',
                             style: TextStyle(
                               fontSize: 14.sp,
@@ -86,7 +93,11 @@ class InOrderPizzaWidget extends GetView<CartController> {
                             ),
                           ),
                           for (String topping in pizza.toppings)
-                            Text('- $topping'),
+                            Text(
+                              '- $topping',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                         ],
                       ),
                     ),

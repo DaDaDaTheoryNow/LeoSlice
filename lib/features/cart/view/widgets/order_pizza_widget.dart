@@ -27,12 +27,15 @@ class OrderPizzaWidget extends GetView<CartController> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: CachedNetworkImage(
-                  imageUrl: pizza.picture.value,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                child: Center(
+                  child: CachedNetworkImage(
+                    imageUrl: pizza.picture.value,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  ),
                 ),
               ),
               Expanded(

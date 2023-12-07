@@ -40,19 +40,19 @@ class OrderInfoWidget extends StatelessWidget {
               RichText(
                 text: TextSpan(
                   children: [
-                    TextSpan(
+                    const TextSpan(
                       text: 'Order Information -',
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 16.sp,
+                        fontSize: 18,
                       ),
                     ),
                     TextSpan(
                       text: ' ${order.price.toStringAsFixed(0)}₽',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
-                        fontSize: 16.sp,
+                        fontSize: 18,
                       ),
                     )
                   ],
