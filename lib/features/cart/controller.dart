@@ -102,7 +102,7 @@ class CartController extends GetxController {
       }
       if (response.statusCode == 200) {
         final List<Order> copy = List.from(state.allUserOrders.orders);
-        copy.addAll(AllUserOrders.fromJson(response.data).orders);
+        copy.insertAll(0, AllUserOrders.fromJson(response.data).orders);
 
         state.allUserOrders = AllUserOrders(orders: copy);
         _setUserOrdersApiState(AllUserOrdersState.done);
@@ -164,6 +164,58 @@ class CartController extends GetxController {
     }
 
     _setUserOrdersApiState(AllUserOrdersState.done);
+  }
+
+  Future<void> repeatOrder(int orderId) async {
+    if (sharedState.tokenResponse == null ||
+        sharedState.tokenResponse?.accessToken == null) {
+      _setAllUserOrdersState(AllUserOrdersState.needLogin);
+      return;
+    }
+
+    final url =
+        'https://pizza-dev-k5af.onrender.com/order/repeat-order/$orderId';
+
+    try {
+      _setAllUserOrdersState(AllUserOrdersState.loading);
+
+      final response = await dio.post(
+        url,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer ${sharedState.tokenResponse!.accessToken}',
+          },
+        ),
+      );
+
+      if (response.statusCode == 401 || response.statusCode == 422) {
+        state.userOrdersError = "Invalid Credentials";
+        _setAllUserOrdersState(AllUserOrdersState.error);
+      }
+      if (response.statusCode == 200) {
+        final newOrder = AllUserOrders.fromJson(response.data);
+        final List<Order> copy = List.from(state.allUserOrders.orders);
+
+        copy.removeWhere(
+            (element) => element.orderId == newOrder.orders.first.orderId);
+
+        copy.insert(0, newOrder.orders.first);
+
+        state.allUserOrders = AllUserOrders(orders: copy);
+
+        _setAllUserOrdersState(AllUserOrdersState.done);
+      }
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.sendTimeout) {
+        state.cartError = "Connection problems, check your internet connection";
+      } else {
+        state.cartError = e.toString();
+      }
+
+      _setAllUserOrdersState(AllUserOrdersState.error);
+    }
   }
 
   void _setAllUserOrdersState(AllUserOrdersState allUserOrdersState) {

@@ -17,59 +17,88 @@ class MenuPage extends GetView<MenuController> {
       return Obx(() {
         switch (controller.state.menuState) {
           case CurrentApiMenuState.loading:
-            return const Center(
-              child: CircularProgressIndicator(),
+            return const SafeArea(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
             );
           case CurrentApiMenuState.done:
-            return Obx(
-              () => ListView.builder(
-                itemCount: controller.state.pizzaList.length,
-                itemBuilder: (context, index) {
-                  Pizza pizza = controller.state.pizzaList[index];
-                  return Obx(
-                    () => Padding(
-                      padding: EdgeInsets.only(
-                          bottom:
-                              (index == controller.state.pizzaList.length - 1 &&
+            return RefreshIndicator(
+              displacement: 50.h,
+              color: AppColors.blue,
+              onRefresh: () => controller.fetchPizza(changeState: false),
+              child: CustomScrollView(
+                controller: controller.state.scrollController,
+                slivers: [
+                  SliverAppBar(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        bottom: Radius.circular(25.r),
+                      ),
+                    ),
+                    centerTitle: true,
+                    automaticallyImplyLeading: false,
+                    title: const Text(
+                      "Menu",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    toolbarHeight: 45.h,
+                    backgroundColor: AppColors.blue,
+                  ),
+                  SliverPadding(
+                    padding: EdgeInsets.only(top: 5.h),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          Pizza pizza = controller.state.pizzaList[index];
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              bottom: (index ==
+                                          controller.state.pizzaList.length -
+                                              1 &&
                                       controller.cartController.state
                                           .cartPizzaList.isNotEmpty)
                                   ? 64.h
-                                  : 0),
-                      child: PizzaWidget(pizza: pizza),
+                                  : 0,
+                            ),
+                            child: PizzaWidget(pizza: pizza),
+                          );
+                        },
+                        childCount: controller.state.pizzaList.length,
+                      ),
                     ),
-                  );
-                },
+                  ),
+                ],
               ),
             );
           case CurrentApiMenuState.error:
-            return const MenuError();
+            return const SafeArea(child: MenuError());
         }
       });
     }
 
-    return RefreshIndicator(
-        color: AppColors.blue,
-        onRefresh: () => controller.fetchPizza(changeState: false),
-        child: SafeArea(
-          child: Scaffold(
-            body: buildScreenWithState(),
-            floatingActionButton: Obx(
-                () => (controller.cartController.state.cartPizzaList.isNotEmpty)
-                    ? SizedBox(
-                        height: 50.h,
-                        width: 55.w,
-                        child: FloatingActionButton(
-                          onPressed: () => controller.jumpToCartPage(),
-                          backgroundColor: AppColors.blue,
-                          child: Icon(
-                            Icons.shopping_cart,
-                            size: 20.r,
-                            color: Colors.white,
-                          ),
-                        ),
-                      )
-                    : const SizedBox()),
-          ),
-        ));
+    return Scaffold(
+      body: buildScreenWithState(),
+      floatingActionButton: Obx(
+        () => (controller.cartController.state.cartPizzaList.isNotEmpty)
+            ? SizedBox(
+                height: 50.h,
+                width: 55.w,
+                child: FloatingActionButton(
+                  onPressed: () => controller.jumpToCartPage(),
+                  backgroundColor: AppColors.blue,
+                  child: Icon(
+                    Icons.shopping_cart,
+                    size: 20.r,
+                    color: Colors.white,
+                  ),
+                ),
+              )
+            : const SizedBox(),
+      ),
+    );
   }
 }

@@ -14,8 +14,8 @@ class PizzaWidget extends GetView<MenuController> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 5,
-      margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 15.w),
+      elevation: 3,
+      margin: EdgeInsets.symmetric(vertical: 7.h, horizontal: 15.w),
       child: Column(
         children: [
           Row(
@@ -139,6 +139,35 @@ class PizzaWidget extends GetView<MenuController> {
                   ),
                   onPressed: () => controller.addPizzaToCart(pizza),
                 ),
+                Tooltip(
+                  message: "Sort by favorite",
+                  waitDuration: const Duration(milliseconds: 400),
+                  margin: EdgeInsets.all(5.r),
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 15.w),
+                    child: Obx(
+                      () => IconButton(
+                        onPressed: () => controller.addPizzaToFavorite(pizza),
+                        icon: (pizza.isFavorite.value)
+                            ? const Icon(
+                                Icons.star,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.black,
+                                    offset: Offset(1, 1),
+                                    blurRadius: 3,
+                                  )
+                                ],
+                                color: Colors.yellow,
+                              )
+                            : const Icon(
+                                Icons.star_border,
+                                color: Colors.black,
+                              ),
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
           ),

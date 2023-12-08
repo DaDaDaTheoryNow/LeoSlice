@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leo_slice/common/until/enum/current_api_menu_state.dart';
 import 'package:leo_slice/common/until/model/pizza.dart';
@@ -14,4 +15,8 @@ class MenuState {
   final Rx<CurrentApiMenuState> _menuState = CurrentApiMenuState.loading.obs;
   CurrentApiMenuState get menuState => _menuState.value;
   set menuState(value) => _menuState.value = value;
+
+  final Rx<ScrollController> _scrollController = ScrollController().obs;
+  ScrollController get scrollController => _scrollController.value;
+  set scrollController(value) => _scrollController.value = value;
 }

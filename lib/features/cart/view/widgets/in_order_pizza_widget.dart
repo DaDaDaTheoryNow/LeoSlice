@@ -14,8 +14,8 @@ class InOrderPizzaWidget extends GetView<CartController> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 5,
-      margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 15.w),
+      elevation: 1,
+      margin: EdgeInsets.symmetric(vertical: 7.h, horizontal: 15.w),
       child: Column(
         children: [
           Row(

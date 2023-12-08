@@ -22,6 +22,7 @@ class Order {
   final List<PizzaOrder> pizzas;
   final String address;
   final int userId;
+  final int orderId;
   final double price;
   final DateTime date;
   final String status;
@@ -30,6 +31,7 @@ class Order {
     required this.pizzas,
     required this.address,
     required this.userId,
+    required this.orderId,
     required this.price,
     required this.date,
     required this.status,
@@ -44,6 +46,7 @@ class Order {
       pizzas: pizzas,
       address: json['address'] ?? "",
       userId: json['user_id'],
+      orderId: json["id"],
       price: json['price'].toDouble(),
       date: DateTime.parse(json['date']),
       status: json['status'] ?? "",

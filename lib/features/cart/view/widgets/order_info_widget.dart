@@ -1,12 +1,14 @@
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:leo_slice/common/theme/app_colors.dart';
 import 'package:leo_slice/common/until/model/all_user_orders.dart';
+import 'package:leo_slice/features/cart/controller.dart';
 import 'package:leo_slice/features/cart/view/widgets/in_order_pizza_widget.dart';
 
-class OrderInfoWidget extends StatelessWidget {
+class OrderInfoWidget extends GetView<CartController> {
   final Order order;
 
   OrderInfoWidget({
@@ -29,7 +31,8 @@ class OrderInfoWidget extends StatelessWidget {
     }
 
     return Card(
-      elevation: 5,
+      elevation: 1,
+      color: AppColors.bluePlaceholder,
       margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 15.w),
       child: Center(
         child: ListTile(
@@ -37,26 +40,50 @@ class OrderInfoWidget extends StatelessWidget {
           title: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              RichText(
-                text: TextSpan(
-                  children: [
-                    const TextSpan(
-                      text: 'Order Information -',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
+              const Text(
+                'Order Information',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Card(
+                    margin: EdgeInsets.only(
+                        top: 5.h, bottom: 3.h, left: 5.w, right: 5.w),
+                    color: AppColors.blue,
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                      child: Text(
+                        '${order.price.toStringAsFixed(0)}₽',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                        ),
                       ),
                     ),
-                    TextSpan(
-                      text: ' ${order.price.toStringAsFixed(0)}₽',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                        fontSize: 18,
+                  ),
+                  Card(
+                    margin: EdgeInsets.only(
+                        top: 5.h, bottom: 3.h, left: 5.w, right: 5.w),
+                    color: AppColors.blue,
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                      child: Text(
+                        'ID - ${order.orderId}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                        ),
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                  ),
+                ],
               ),
               const Divider(),
             ],
@@ -67,7 +94,6 @@ class OrderInfoWidget extends StatelessWidget {
               if (order.address.isEmpty)
                 Text('Address: г.Самара д.28 кв.123', style: _textStyle),
               if (order.address.isNotEmpty) Text('Address: ${order.address}'),
-              Text('User ID: ${order.userId}', style: _textStyle),
               Text('Date: $dateTime', style: _textStyle),
               Text('Status: ${order.status}', style: _textStyle),
               Padding(
@@ -93,6 +119,15 @@ class OrderInfoWidget extends StatelessWidget {
                         )
                         .toList(),
                   ],
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 15.w, right: 15.w, top: 13.h),
+                width: MediaQuery.of(context).size.width,
+                child: ElevatedButton(
+                  onPressed: () => controller.repeatOrder(order.orderId),
+                  child: Text("Repeat this order",
+                      style: Theme.of(context).textTheme.labelLarge),
                 ),
               ),
             ],

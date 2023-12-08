@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leo_slice/common/until/enum/all_user_orders_state.dart';
 import 'package:leo_slice/common/until/model/all_user_orders.dart';
@@ -33,4 +34,8 @@ class CartState {
   final RxInt _draftPrice = 0.obs;
   int get draftPrice => _draftPrice.value;
   set draftPrice(value) => _draftPrice.value = value;
+
+  final Rx<ScrollController> _scrollController = ScrollController().obs;
+  ScrollController get scrollController => _scrollController.value;
+  set scrollController(value) => _scrollController.value = value;
 }

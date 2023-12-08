@@ -6,6 +6,7 @@ import 'package:leo_slice/common/pages.dart';
 import 'package:leo_slice/common/theme/theme.dart';
 import 'package:leo_slice/features/cart/controller.dart';
 import 'package:leo_slice/features/home/controller.dart';
+import 'package:leo_slice/features/menu/controller.dart';
 import 'package:leo_slice/features/shared/controller.dart';
 
 void main() async {
@@ -17,7 +18,9 @@ void main() async {
   ]);
 
   Get.put<SharedController>(SharedController());
+
   Get.put<CartController>(CartController());
+  Get.put<MenuController>(MenuController());
 
   await Get.put<HomeController>(HomeController()).loadUserData();
 

@@ -9,7 +9,7 @@ class Pizza {
   final RxString picture = ''.obs;
   final RxInt id = 0.obs;
   final RxDouble price = 0.0.obs;
-  final RxBool isCustom = false.obs;
+  final RxBool isFavorite = false.obs;
   final RxInt toCart = 0.obs;
 
   Pizza({
@@ -21,7 +21,7 @@ class Pizza {
     required String picture,
     required int id,
     required double price,
-    required bool isCustom,
+    required bool isFavorite,
     required int toCart,
   }) {
     this.title(title);
@@ -32,7 +32,7 @@ class Pizza {
     this.picture(picture);
     this.id(id);
     this.price(price);
-    this.isCustom(isCustom);
+    this.isFavorite(isFavorite);
     this.toCart(toCart);
   }
 
@@ -46,7 +46,7 @@ class Pizza {
       picture: json['picture'],
       id: json['id'],
       price: json['price'].toDouble(),
-      isCustom: json['is_custom'],
+      isFavorite: false,
       toCart: 0,
     );
   }

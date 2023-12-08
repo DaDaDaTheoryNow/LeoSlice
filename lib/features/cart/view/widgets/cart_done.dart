@@ -33,7 +33,7 @@ class CartDone extends GetView<CartController> {
               ? Column(
                   children: [
                     Container(
-                      margin: const EdgeInsets.all(15),
+                      margin: EdgeInsets.all(15.r),
                       child: ExpansionTileCard(
                         baseColor: AppColors.bluePlaceholder,
                         expandedColor: AppColors.bluePlaceholder,
@@ -150,12 +150,11 @@ class CartDone extends GetView<CartController> {
             : const SizedBox()),
         // all user orders
         Obx(() => (controller.state.allUserOrders.orders.isNotEmpty)
-            ? Column(
-                children:
-                    controller.state.allUserOrders.orders.reversed.map((order) {
-                  return OrderInfoWidget(order: order);
-                }).toList(),
-              )
+            ? Obx(() => Column(
+                  children: controller.state.allUserOrders.orders.map((order) {
+                    return OrderInfoWidget(order: order);
+                  }).toList(),
+                ))
             : const SizedBox())
       ],
     );
