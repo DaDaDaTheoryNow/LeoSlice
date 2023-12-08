@@ -15,7 +15,7 @@ class PizzaWidget extends GetView<MenuController> {
   Widget build(BuildContext context) {
     return Card(
       elevation: 3,
-      margin: EdgeInsets.symmetric(vertical: 7.h, horizontal: 15.w),
+      margin: EdgeInsets.symmetric(vertical: 4.h, horizontal: 15.w),
       child: Column(
         children: [
           Row(
@@ -139,12 +139,18 @@ class PizzaWidget extends GetView<MenuController> {
                   ),
                   onPressed: () => controller.addPizzaToCart(pizza),
                 ),
+                Container(
+                  margin: EdgeInsets.only(left: 5.w),
+                  height: 20.h,
+                  width: 1.w,
+                  color: Colors.grey,
+                ),
                 Tooltip(
-                  message: "Sort by favorite",
+                  message: "add to favorite",
                   waitDuration: const Duration(milliseconds: 400),
                   margin: EdgeInsets.all(5.r),
                   child: Padding(
-                    padding: EdgeInsets.only(right: 15.w),
+                    padding: EdgeInsets.only(left: 5.w),
                     child: Obx(
                       () => IconButton(
                         onPressed: () => controller.addPizzaToFavorite(pizza),

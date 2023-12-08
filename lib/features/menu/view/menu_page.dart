@@ -54,18 +54,19 @@ class MenuPage extends GetView<MenuController> {
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           Pizza pizza = controller.state.pizzaList[index];
-                          return Padding(
-                            padding: EdgeInsets.only(
-                              bottom: (index ==
-                                          controller.state.pizzaList.length -
-                                              1 &&
-                                      controller.cartController.state
-                                          .cartPizzaList.isNotEmpty)
-                                  ? 64.h
-                                  : 0,
-                            ),
-                            child: PizzaWidget(pizza: pizza),
-                          );
+                          return Obx(() => Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: (index ==
+                                              controller
+                                                      .state.pizzaList.length -
+                                                  1 &&
+                                          controller.cartController.state
+                                              .cartPizzaList.isNotEmpty)
+                                      ? 70.h
+                                      : 10.h,
+                                ),
+                                child: PizzaWidget(pizza: pizza),
+                              ));
                         },
                         childCount: controller.state.pizzaList.length,
                       ),
