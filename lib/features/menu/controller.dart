@@ -93,6 +93,8 @@ class MenuController extends GetxController {
         url,
       );
 
+      await Future.delayed(const Duration(milliseconds: 300));
+
       if (response.statusCode == 401 || response.statusCode == 422) {
         state.menuError = "Validation Error";
         if (changeState) {

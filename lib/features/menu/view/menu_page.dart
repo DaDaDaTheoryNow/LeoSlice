@@ -17,9 +17,24 @@ class MenuPage extends GetView<MenuController> {
       return Obx(() {
         switch (controller.state.menuState) {
           case CurrentApiMenuState.loading:
-            return const SafeArea(
+            return SafeArea(
               child: Center(
-                child: CircularProgressIndicator(),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CircularProgressIndicator(),
+                    SizedBox(
+                      height: 5.h,
+                    ),
+                    Text(
+                      "Be patient it may take 1-2 minutes",
+                      style: TextStyle(
+                        fontSize: 17.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           case CurrentApiMenuState.done:
