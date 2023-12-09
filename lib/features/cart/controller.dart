@@ -79,6 +79,41 @@ class CartController extends GetxController {
     }
   }
 
+  Future<void> cancelOrder({required int userId, required int orderId}) async {
+    if (sharedState.tokenResponse == null ||
+        sharedState.tokenResponse?.accessToken == null) {
+      _setAllUserOrdersState(AllUserOrdersState.needLogin);
+      return;
+    }
+
+    final url =
+        "https://pizza-dev-k5af.onrender.com/order/change-status/$userId/$orderId?status=cancelled";
+
+    try {
+      Response response = await dio.post(
+        url,
+      );
+
+      if (response.statusCode == 401 || response.statusCode == 422) {
+        state.cartError = "Invalid Credentials";
+        _setAllUserOrdersState(AllUserOrdersState.error);
+      }
+      if (response.statusCode == 200) {
+        _setAllUserOrdersState(AllUserOrdersState.done);
+      }
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.sendTimeout) {
+        state.cartError = "Connection problems, check your internet connection";
+      } else {
+        state.cartError = e.toString();
+      }
+
+      _setAllUserOrdersState(AllUserOrdersState.error);
+    }
+  }
+
   Future<void> createNewOrder() async {
     if (sharedState.tokenResponse == null ||
         sharedState.tokenResponse?.accessToken == null) {
@@ -150,12 +185,6 @@ class CartController extends GetxController {
   }
 
   void listenChangedOrdersWebSocket() {
-    if (sharedState.tokenResponse == null ||
-        sharedState.tokenResponse?.accessToken == null) {
-      _setAllUserOrdersState(AllUserOrdersState.needLogin);
-      return;
-    }
-
     final wsUrl = Uri.parse(
         'wss://pizza-dev-k5af.onrender.com/order/users-orders-ws?user_token=${sharedState.tokenResponse!.accessToken}');
     var channel = WebSocketChannel.connect(wsUrl);

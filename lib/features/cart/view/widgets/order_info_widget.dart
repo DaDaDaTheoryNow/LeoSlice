@@ -48,6 +48,7 @@ class OrderInfoWidget extends GetView<CartController> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              SizedBox(height: 2.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -129,6 +130,23 @@ class OrderInfoWidget extends GetView<CartController> {
                       child: ElevatedButton(
                         onPressed: () => controller.repeatOrder(order.orderId),
                         child: Text("Repeat this order",
+                            style: Theme.of(context).textTheme.labelLarge),
+                      ),
+                    )
+                  : const SizedBox(),
+              (order.status == "preparing")
+                  ? Container(
+                      margin:
+                          EdgeInsets.only(left: 15.w, right: 15.w, top: 13.h),
+                      width: MediaQuery.of(context).size.width,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          controller.cancelOrder(
+                              userId: order.userId, orderId: order.orderId);
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red),
+                        child: Text("Cancel",
                             style: Theme.of(context).textTheme.labelLarge),
                       ),
                     )

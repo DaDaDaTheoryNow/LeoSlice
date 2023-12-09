@@ -24,7 +24,7 @@ class MenuPage extends GetView<MenuController> {
             );
           case CurrentApiMenuState.done:
             return RefreshIndicator(
-              displacement: 50.h,
+              displacement: 75.h,
               color: AppColors.blue,
               onRefresh: () => controller.fetchPizza(changeState: false),
               child: CustomScrollView(
