@@ -10,7 +10,7 @@ class SharedState {
 
   SharedState() {
     ever(_tokenResponse, (_) {
-      Get.find<CartController>().fetchAllUserOrders();
+      Get.find<CartController>().fetchUserOrders();
       Get.find<MenuController>().fetchPizza();
     });
   }

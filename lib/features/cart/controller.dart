@@ -1,11 +1,18 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart' hide FormData, Response;
 import 'package:leo_slice/common/until/enum/all_user_orders_state.dart';
 import 'package:leo_slice/common/until/model/all_user_orders.dart';
+import 'package:leo_slice/common/until/model/order_status_change_event.dart';
 import 'package:leo_slice/common/until/model/pizza.dart';
 import 'package:leo_slice/features/home/controller.dart';
 import 'package:leo_slice/features/menu/controller.dart';
 import 'package:leo_slice/features/shared/controller.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'state.dart';
 
@@ -14,6 +21,8 @@ class CartController extends GetxController {
   final sharedState = Get.find<SharedController>().state;
 
   final dio = Dio();
+
+  bool _firstFetchOrders = true;
 
   void jumpToAccountPage() {
     Get.find<HomeController>().onItemSelected(2, animated: true);
@@ -121,7 +130,53 @@ class CartController extends GetxController {
     }
   }
 
-  Future<void> fetchAllUserOrders() async {
+  StreamSubscription<ConnectivityResult>? subscription;
+  void listenInternetChanges() {
+    subscription ??= Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.wifi ||
+          result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.vpn) {
+        if (!_firstFetchOrders) {
+          debugPrint("reconnection");
+          fetchUserOrders();
+        } else {
+          _firstFetchOrders = false;
+        }
+      }
+    });
+  }
+
+  void listenChangedOrdersWebSocket() {
+    if (sharedState.tokenResponse == null ||
+        sharedState.tokenResponse?.accessToken == null) {
+      _setAllUserOrdersState(AllUserOrdersState.needLogin);
+      return;
+    }
+
+    final wsUrl = Uri.parse(
+        'wss://pizza-dev-k5af.onrender.com/order/users-orders-ws?user_token=${sharedState.tokenResponse!.accessToken}');
+    var channel = WebSocketChannel.connect(wsUrl);
+
+    channel.stream.listen((data) {
+      final Map<String, dynamic> jsonData = jsonDecode(data);
+      if (jsonData["type"] == "change_status") {
+        final OrderStatusChangeEvent event =
+            OrderStatusChangeEvent.fromJson(jsonData);
+
+        final List<Order> orders = List.from(state.allUserOrders.orders);
+        orders
+            .firstWhereOrNull((order) => order.orderId == event.orderId)
+            ?.status = event.status;
+
+        state.allUserOrders = AllUserOrders(orders: orders);
+      }
+    });
+  }
+
+  Future<void> fetchUserOrders() async {
     if (sharedState.tokenResponse == null ||
         sharedState.tokenResponse?.accessToken == null) {
       _setAllUserOrdersState(AllUserOrdersState.needLogin);
@@ -149,6 +204,10 @@ class CartController extends GetxController {
       }
       if (response.statusCode == 200) {
         state.allUserOrders = AllUserOrders.fromJson(response.data);
+
+        listenInternetChanges();
+        listenChangedOrdersWebSocket();
+
         _setAllUserOrdersState(AllUserOrdersState.done);
       }
     } on DioException catch (e) {

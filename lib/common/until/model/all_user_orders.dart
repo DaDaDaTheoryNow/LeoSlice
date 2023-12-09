@@ -25,7 +25,7 @@ class Order {
   final int orderId;
   final double price;
   final DateTime date;
-  final String status;
+  String status;
 
   Order({
     required this.pizzas,

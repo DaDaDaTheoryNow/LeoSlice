@@ -20,7 +20,7 @@ class CartError extends GetView<CartController> {
           margin: EdgeInsets.symmetric(horizontal: 15.w),
           width: MediaQuery.of(context).size.width,
           child: ElevatedButton(
-            onPressed: () => controller.fetchAllUserOrders(),
+            onPressed: () => controller.fetchUserOrders(),
             child:
                 Text("Refresh", style: Theme.of(context).textTheme.labelLarge),
           ),

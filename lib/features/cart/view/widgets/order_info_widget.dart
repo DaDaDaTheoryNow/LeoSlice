@@ -121,15 +121,18 @@ class OrderInfoWidget extends GetView<CartController> {
                   ],
                 ),
               ),
-              Container(
-                margin: EdgeInsets.only(left: 15.w, right: 15.w, top: 13.h),
-                width: MediaQuery.of(context).size.width,
-                child: ElevatedButton(
-                  onPressed: () => controller.repeatOrder(order.orderId),
-                  child: Text("Repeat this order",
-                      style: Theme.of(context).textTheme.labelLarge),
-                ),
-              ),
+              (order.status == "delivered" || order.status == "cancelled")
+                  ? Container(
+                      margin:
+                          EdgeInsets.only(left: 15.w, right: 15.w, top: 13.h),
+                      width: MediaQuery.of(context).size.width,
+                      child: ElevatedButton(
+                        onPressed: () => controller.repeatOrder(order.orderId),
+                        child: Text("Repeat this order",
+                            style: Theme.of(context).textTheme.labelLarge),
+                      ),
+                    )
+                  : const SizedBox()
             ],
           ),
         ),
