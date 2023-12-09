@@ -5,7 +5,7 @@
 
 ## Technologies
 - Flutter
-- Python (backend)
+- Python (backend - https://github.com/kirill221100/hackathon_pizza_delivery)
 - RestApi (https://pizza-dev-k5af.onrender.com/docs#)
 
 ### Made for Хакатоны.рус TASKILLS
