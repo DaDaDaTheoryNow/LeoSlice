@@ -5,7 +5,7 @@ import 'package:leo_slice/common/theme/app_colors.dart';
 import 'package:leo_slice/common/until/enum/current_api_sign_status.dart';
 import 'package:leo_slice/common/until/enum/sign_state.dart';
 import 'package:leo_slice/features/account/controller.dart';
-import 'package:leo_slice/features/account/view/widgets/custom_text_input.dart';
+import 'package:leo_slice/common/widgets/custom_text_input.dart';
 import 'package:leo_slice/common/widgets/sign_error.dart';
 
 class RegisterPage extends GetView<ProfileController> {
@@ -48,9 +48,10 @@ class RegisterPage extends GetView<ProfileController> {
                     FocusManager.instance.primaryFocus?.unfocus();
 
                     final nameText =
-                        controller.state.registerNameTextController.text;
-                    final passwordText =
-                        controller.state.registerPasswordTextController.text;
+                        controller.state.registerNameTextController.text.trim();
+                    final passwordText = controller
+                        .state.registerPasswordTextController.text
+                        .trim();
 
                     if (nameText.isNotEmpty & passwordText.isNotEmpty) {
                       controller.state.registerError = "";

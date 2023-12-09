@@ -93,8 +93,9 @@ class OrderInfoWidget extends GetView<CartController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (order.address.isEmpty)
-                Text('Address: г.Самара д.28 кв.123', style: _textStyle),
-              if (order.address.isNotEmpty) Text('Address: ${order.address}'),
+                Text('Address: 28 Фрунзе, Самара', style: _textStyle),
+              if (order.address.isNotEmpty)
+                Text('Address: ${order.address}', style: _textStyle),
               Text('Date: $dateTime', style: _textStyle),
               Text('Status: ${order.status}', style: _textStyle),
               Padding(

@@ -3,12 +3,12 @@ import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart' hide FormData, Response;
 import 'package:leo_slice/common/until/enum/all_user_orders_state.dart';
 import 'package:leo_slice/common/until/model/all_user_orders.dart';
 import 'package:leo_slice/common/until/model/order_status_change_event.dart';
 import 'package:leo_slice/common/until/model/pizza.dart';
+import 'package:leo_slice/features/account/controller.dart';
 import 'package:leo_slice/features/home/controller.dart';
 import 'package:leo_slice/features/menu/controller.dart';
 import 'package:leo_slice/features/shared/controller.dart';
@@ -69,16 +69,6 @@ class CartController extends GetxController {
     }
   }
 
-  void acceptDraft() async {
-    await createNewOrder();
-
-    final menuController = Get.find<MenuController>();
-    state.cartPizzaList.clear();
-    for (var element in menuController.state.pizzaList) {
-      element.toCart.value = 0;
-    }
-  }
-
   Future<void> cancelOrder({required int userId, required int orderId}) async {
     if (sharedState.tokenResponse == null ||
         sharedState.tokenResponse?.accessToken == null) {
@@ -115,6 +105,11 @@ class CartController extends GetxController {
   }
 
   Future<void> createNewOrder() async {
+    if (sharedState.address == null) {
+      Get.find<ProfileController>().goToAddressPage();
+      return;
+    }
+
     if (sharedState.tokenResponse == null ||
         sharedState.tokenResponse?.accessToken == null) {
       _setAllUserOrdersState(AllUserOrdersState.needLogin);
@@ -126,6 +121,10 @@ class CartController extends GetxController {
     try {
       _setUserOrdersApiState(AllUserOrdersState.loading);
 
+      final city = sharedState.address!.city;
+      final street = sharedState.address!.street;
+      final house = sharedState.address!.house;
+
       Response response = await dio.post(
         url,
         options: Options(
@@ -136,7 +135,7 @@ class CartController extends GetxController {
         ),
         data: {
           "pizzas": state.cartPizzaList.map((pizza) => pizza.toJson()).toList(),
-          "address": '',
+          "address": '$house $street, $city',
         },
       );
 
@@ -145,6 +144,12 @@ class CartController extends GetxController {
         _setUserOrdersApiState(AllUserOrdersState.error);
       }
       if (response.statusCode == 200) {
+        final menuController = Get.find<MenuController>();
+        state.cartPizzaList.clear();
+        for (var element in menuController.state.pizzaList) {
+          element.toCart.value = 0;
+        }
+
         final List<Order> copy = List.from(state.allUserOrders.orders);
         copy.insertAll(0, AllUserOrders.fromJson(response.data).orders);
 
@@ -175,7 +180,6 @@ class CartController extends GetxController {
           result == ConnectivityResult.mobile ||
           result == ConnectivityResult.vpn) {
         if (!_firstFetchOrders) {
-          debugPrint("reconnection");
           fetchUserOrders();
         } else {
           _firstFetchOrders = false;

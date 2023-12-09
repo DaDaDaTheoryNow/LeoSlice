@@ -33,7 +33,17 @@ class AccountWidget extends GetView<ProfileController> {
                 margin: EdgeInsets.symmetric(horizontal: 15.w),
                 width: MediaQuery.of(context).size.width,
                 child: ElevatedButton(
+                  onPressed: () => controller.goToAddressPage(),
+                  child: Text("Change Address",
+                      style: Theme.of(context).textTheme.labelLarge),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 35.w),
+                width: MediaQuery.of(context).size.width,
+                child: ElevatedButton(
                   onPressed: () => controller.userSignOut(),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                   child: Text("Leave",
                       style: Theme.of(context).textTheme.labelLarge),
                 ),

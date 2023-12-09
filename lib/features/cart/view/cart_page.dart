@@ -24,6 +24,7 @@ class CartPage extends GetView<CartController> {
             return const CartError();
           case AllUserOrdersState.done:
             return ListView(
+              controller: controller.state.scrollController,
               children: [
                 CartDone(),
               ],

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart' hide FormData, Response;
+import 'package:leo_slice/common/pages.dart';
 import 'package:leo_slice/common/until/enum/current_api_sign_status.dart';
 import 'package:leo_slice/common/until/enum/sign_state.dart';
 import 'package:leo_slice/common/until/shared_preferences/user_prefs.dart';
@@ -15,6 +16,12 @@ class ProfileController extends GetxController {
   final sharedState = Get.find<SharedController>().state;
 
   final Dio dio = Dio();
+
+  void goToAddressPage({bool ignoreCurrentAddress = true}) {
+    if (sharedState.address == null || ignoreCurrentAddress) {
+      Get.offNamedUntil(AppPages.address, (route) => true);
+    }
+  }
 
   void resetToDefault() {
     state.currentApiSignStatus = CurrentApiSignStatus.stay;
@@ -42,8 +49,8 @@ class ProfileController extends GetxController {
     const url = 'https://pizza-dev-k5af.onrender.com/auth/login';
 
     Map<String, dynamic> data = {
-      "username": name.trim(),
-      "password": password.trim(),
+      "username": name,
+      "password": password,
     };
 
     try {
@@ -63,6 +70,7 @@ class ProfileController extends GetxController {
         state.loginError = "Invalid Credentials";
       }
       if (response.statusCode == 200 && response.data is Map<String, dynamic>) {
+        goToAddressPage();
         userPrefs.succesUserLogin(response.data);
       }
     } on DioException catch (e) {
@@ -85,8 +93,8 @@ class ProfileController extends GetxController {
     const url = 'https://pizza-dev-k5af.onrender.com/auth/register';
 
     Map<String, dynamic> data = {
-      'username': name.trim(),
-      "password": password.trim(),
+      'username': name,
+      "password": password,
     };
 
     try {
@@ -115,6 +123,7 @@ class ProfileController extends GetxController {
 
       if (response.statusCode == 200 && response.data is Map<String, dynamic>) {
         userPrefs.succesUserLogin(response.data);
+        goToAddressPage();
       }
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionError ||

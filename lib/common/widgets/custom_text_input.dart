@@ -6,19 +6,24 @@ class CustomTextInput extends StatelessWidget {
   final EdgeInsets padding;
   final IconData iconData;
   final TextEditingController textEditingController;
+  final bool textCapitalization;
 
   const CustomTextInput(
       {super.key,
       required this.hintText,
       required this.padding,
       required this.iconData,
-      required this.textEditingController});
+      required this.textEditingController,
+      this.textCapitalization = false});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: padding,
       child: TextField(
+        textCapitalization: textCapitalization
+            ? TextCapitalization.sentences
+            : TextCapitalization.none,
         controller: textEditingController,
         style: const TextStyle(
           color: Colors.white,

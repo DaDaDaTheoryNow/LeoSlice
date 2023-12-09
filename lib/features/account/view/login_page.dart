@@ -6,7 +6,7 @@ import 'package:leo_slice/common/until/enum/current_api_sign_status.dart';
 import 'package:leo_slice/common/until/enum/sign_state.dart';
 import 'package:leo_slice/common/widgets/sign_error.dart';
 import 'package:leo_slice/features/account/controller.dart';
-import 'package:leo_slice/features/account/view/widgets/custom_text_input.dart';
+import 'package:leo_slice/common/widgets/custom_text_input.dart';
 
 class LoginPage extends GetView<ProfileController> {
   const LoginPage({super.key});
@@ -45,9 +45,10 @@ class LoginPage extends GetView<ProfileController> {
                 child: ElevatedButton(
                   onPressed: () {
                     final nameText =
-                        controller.state.loginNameTextController.text;
-                    final passwordText =
-                        controller.state.loginPasswordTextController.text;
+                        controller.state.loginNameTextController.text.trim();
+                    final passwordText = controller
+                        .state.loginPasswordTextController.text
+                        .trim();
 
                     if (nameText.isNotEmpty & passwordText.isNotEmpty) {
                       controller.state.loginError = "";

@@ -97,8 +97,7 @@ class CartDone extends GetView<CartController> {
                                 TextButton(
                                   style: flatButtonStyle,
                                   onPressed: () {
-                                    _draft.currentState?.collapse();
-                                    controller.acceptDraft();
+                                    controller.createNewOrder();
                                   },
                                   child: Column(
                                     children: <Widget>[

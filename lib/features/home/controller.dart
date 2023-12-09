@@ -23,5 +23,6 @@ class HomeController extends GetxController {
 
   Future<void> loadUserData() async {
     await userPrefs.loadUserData();
+    await userPrefs.loadAddress();
   }
 }

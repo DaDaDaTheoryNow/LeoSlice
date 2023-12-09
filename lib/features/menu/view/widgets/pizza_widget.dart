@@ -15,7 +15,7 @@ class PizzaWidget extends GetView<MenuController> {
   Widget build(BuildContext context) {
     return Card(
       elevation: 3,
-      margin: EdgeInsets.symmetric(vertical: 4.h, horizontal: 15.w),
+      margin: EdgeInsets.fromLTRB(15.w, 8.h, 15.w, 0),
       child: Column(
         children: [
           Row(
