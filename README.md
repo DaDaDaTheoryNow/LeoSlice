@@ -1,6 +1,6 @@
 # LeoSlice
 
-## Warning
+## WARNING
 - The first run may take 1-2 minutes until the API resumes. This is done to optimize the load when no one is using the application.
 
 ## Technologies
